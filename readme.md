@@ -14,4 +14,4 @@
 1. From the cloned folder open terminal and execute `npm start`
 
 ## Review CSV results
-The `*.csv` result are stored in the `./output/*` folder
+The `*.csv` results are stored in the `./output/*` folder
