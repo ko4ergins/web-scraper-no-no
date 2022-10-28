@@ -106,4 +106,4 @@ class ProffNoScraper extends MainScraper implements IScraper {
    }
 }
 
-export default new ProffNoScraper();
+export default new ProffNoScraper().scrapingData();

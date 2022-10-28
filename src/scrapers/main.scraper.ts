@@ -52,5 +52,7 @@ export interface IScraper {
    readonly scrapElementsSelectors: { [key: string]: string };
    readonly csvHeader: { id: string; title: string }[];
    scrapingData(): Promise<void>;
-   textClearing(webElWithText: { [key: string]: string }): { [key: string]: string | undefined };
+   textClearing(webElWithText: { [key: string]: string }): {
+      [key: string]: string | undefined;
+   };
 }
