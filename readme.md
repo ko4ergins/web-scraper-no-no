@@ -11,7 +11,8 @@
 3. From the cloned folder open terminal and execute `npm i`
 
 ## How to run web scraper
-1. From the cloned folder open terminal and execute `npm start`
+1. Add `.env` file to the root of project
+2. From the cloned folder open terminal and execute `npm start`
 
 ## Review CSV results
 The `*.csv` results are stored in the `./output/*` folder
