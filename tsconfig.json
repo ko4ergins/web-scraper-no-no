@@ -1,0 +1,18 @@
+{
+   "compilerOptions": {
+      "module": "commonjs",
+      "target": "ES2021",
+      "lib": ["ES2021"],
+      "removeComments": false,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "allowSyntheticDefaultImports": true,
+      "declaration": false,
+      "incremental": true,
+      "strictNullChecks": true,
+      "skipLibCheck": true,
+      "rootDir": "./",
+      "outDir": "./built"
+   },
+   "exclude": ["node_modules", "built", "output"]
+}
