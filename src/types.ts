@@ -1,9 +1,7 @@
-export type CsvWriterType = {
-   folderName: string;
-   header: { id: string; title: string }[];
+export type ExportResultsType = {
+   dirName: string;
    records: { [key: string]: string }[];
 };
-
 export type CsvProffOnType = {
    Company: string;
    'Org-nr': string;

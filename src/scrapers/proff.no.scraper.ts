@@ -1,18 +1,21 @@
 import * as dotenv from 'dotenv';
-import { MainScraper, IScraper } from './main.scraper';
+import { ProffNoExportResults } from '../export.results';
+import { ProffNoBrowserInit } from '../tool.init';
+
+import { IScraper } from '../interfaces';
 
 dotenv.config();
-const proffNoUrl: string = process.env.PROFF_NO || '';
 
-class ProffNoScraper extends MainScraper implements IScraper {
-   readonly scrapElementsSelectors = {
+class ProffNoScraper implements IScraper {
+   private readonly proffNoUrl: string = process.env.PROFF_NO || '';
+   scrapElementsSelectors = {
       company: 'h3 > a',
       orgNumber: '.org-number',
       revenue: '.additional-info li.sorted',
       nrOfEmployees: '//div[@class="additional-info"]//li[contains(., "Ansatte: ")]',
       fullName: '.additional-info li:last-child',
    };
-   readonly csvHeader = [
+   private readonly csvHeader = [
       { id: 'company', title: 'Company' },
       { id: 'orgNumber', title: 'Org-nr' },
       { id: 'revenue', title: 'Revenue' },
@@ -21,13 +24,16 @@ class ProffNoScraper extends MainScraper implements IScraper {
       { id: 'middleName', title: 'Middle_name' },
       { id: 'lastName', title: 'Last_name' },
    ];
+   toolInit = new ProffNoBrowserInit();
+   exportResults = new ProffNoExportResults(this.csvHeader);
 
    async scrapingData(): Promise<void> {
-      await this.init();
-      await this.page.goto(proffNoUrl, { waitUntil: 'networkidle' });
+      const { browser, page } = await this.toolInit.newInstance();
 
-      let nextBtnIsDisabled = (await this.page.$('li.next.arrow > a')) !== null ? false : true;
-      const items = await this.page.locator('.listing');
+      await page.goto(this.proffNoUrl, { waitUntil: 'networkidle' });
+
+      let nextBtnIsDisabled = (await page.$('li.next.arrow > a')) !== null ? false : true;
+      const items = await page.locator('.listing');
       const itemsCount = await items.count();
       let count = 0;
 
@@ -43,38 +49,37 @@ class ProffNoScraper extends MainScraper implements IScraper {
                   .isVisible({ timeout: 1000 });
                if (isVisibleEl) {
                   const itemText = await items.nth(i).locator(selector).innerText();
-                  this.itemScrapedData = {
-                     ...this.itemScrapedData,
+                  this.exportResults.itemScrapedData = {
+                     ...this.exportResults.itemScrapedData,
                      ...this.textClearing({ [field]: itemText }),
                   };
                } else {
-                  this.itemScrapedData = {
-                     ...this.itemScrapedData,
+                  this.exportResults.itemScrapedData = {
+                     ...this.exportResults.itemScrapedData,
                      ...{ [field]: 'NO DATA' },
                   };
                }
             }
 
-            this.csvRecordData.push(this.itemScrapedData);
+            this.exportResults.csvRecordData.push(this.exportResults.itemScrapedData);
          }
-         this.writeToCsvFile({
-            folderName: 'proff-no',
-            header: this.csvHeader,
-            records: this.csvRecordData,
+         this.exportResults.exportResults({
+            dirName: 'proff-no',
+            records: this.exportResults.csvRecordData,
          });
          console.log(`Written to CSV file - #${count} page`);
 
-         const nextArrowBtn = await this.page.$('li.next.arrow > a');
+         const nextArrowBtn = await page.$('li.next.arrow > a');
          if (nextArrowBtn !== null) {
-            await this.page.click('li.next.arrow > a', { timeout: 500 });
-            await this.page.waitForLoadState('domcontentloaded');
+            await page.click('li.next.arrow > a', { timeout: 500 });
+            await page.waitForLoadState('domcontentloaded');
             nextBtnIsDisabled = false;
          } else {
             nextBtnIsDisabled = true;
          }
       }
 
-      await this.browser.close();
+      await browser.close();
       console.log(`Data scraping is done - #${count} pages processed`);
    }
 
