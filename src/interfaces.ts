@@ -4,7 +4,7 @@ export interface IToolInit {
    newInstance: () => any;
 }
 export interface IExportResults {
-   exportResults: (vars: ExportResultsType) => Promise<void>;
+   writeToFile: (vars: ExportResultsType) => Promise<void>;
 }
 export interface IScraper {
    scrapingData: () => Promise<void>;

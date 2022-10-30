@@ -63,7 +63,7 @@ class ProffNoScraper implements IScraper {
 
             this.exportResults.csvRecordData.push(this.exportResults.itemScrapedData);
          }
-         this.exportResults.exportResults({
+         this.exportResults.writeToFile({
             dirName: 'proff-no',
             records: this.exportResults.csvRecordData,
          });

@@ -10,7 +10,7 @@ export class ProffNoExportResults implements IExportResults {
 
    constructor(private csvHeader: { id: string; title: string }[]) {}
 
-   async exportResults(vars: ExportResultsType): Promise<void> {
+   async writeToFile(vars: ExportResultsType): Promise<void> {
       const { dirName, records } = vars;
       const path = `./output/${dirName}`;
 
