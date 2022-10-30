@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
+
 import { ProffNoExportResults } from '../export.results';
 import { ProffNoBrowserInit } from '../tool.init';
-
 import { IScraper } from '../interfaces';
 
 dotenv.config();
